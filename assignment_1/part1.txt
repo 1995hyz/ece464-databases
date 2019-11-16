@@ -1,0 +1,44 @@
+1.
+2.  SELECT boats.bid, COUNT(*) FROM boats
+    INNER JOIN reserves ON boats.bid = reserves.bid
+    GROUP BY boats.bid;
+
+3.  SELECT sailors.sid, sailors.sname
+    FROM reserves
+    INNER JOIN boats ON reserves.bid = boats.bid
+    INNER JOIN sailors ON sailors.sid = reserves.sid
+    WHERE boats.color = 'red'
+    GROUP BY sailors.sid;
+
+4.  SELECT sailors.sid, sailors.sname
+    FROM reserves
+    INNER JOIN boats ON reserves.bid = boats.bid AND boats.color = 'red'
+    INNER JOIN sailors ON sailors.sid = reserves.sid
+    WHERE sailors.sid NOT IN
+    (SELECT sailors.sid
+    FROM reserves
+    INNER JOIN boats ON reserves.bid = boats.bid AND boats.color <> 'red'
+    INNER JOIN sailors ON sailors.sid = reserves.sid)
+    GROUP BY sailors.sid;
+
+5.  SELECT boats.bid, boats.bname
+    FROM boats
+    INNER JOIN reserves ON boats.bid = reserves.bid
+    GROUP BY boats.bid
+    ORDER BY COUNT(*) DESC
+    LIMIT 1
+
+6.  SELECT sailors.sid, sailors.sname
+    FROM reserves
+    INNER JOIN boats ON reserves.bid = boats.bid
+    INNER JOIN sailors ON sailors.sid = reserves.sid
+    WHERE sailors.sid NOT IN
+    (SELECT sailors.sid
+    FROM reserves
+    INNER JOIN boats ON reserves.bid = boats.bid AND boats.color = 'red'
+    INNER JOIN sailors ON sailors.sid = reserves.sid)
+    GROUP BY sailors.sid;
+
+7.  SELECT AVG(sailors.age)
+    FROM sailors
+    WHERE sailors.rating = 10
