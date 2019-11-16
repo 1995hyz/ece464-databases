@@ -10,7 +10,7 @@ session = Session()
 Base = declarative_base()
 
 
-class Sailor(Base):
+class Sailors(Base):
     __tablename__ = 'sailors'
 
     id = Column("sid", Integer, primary_key=True)
