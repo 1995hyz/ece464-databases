@@ -35,10 +35,16 @@ def where2watch(soup):
 
 
 def movie_description(soup):
-    description = soup.find("div", {"id": "movieSynopsis"})
+    description = soup.find("div", {"id": "movieSynopsis"}).text
+    return description
+
+
+def movie_meta(soup):
+    meta_data = soup.find_all("li", {"class": "meta-row clearfix"})
 
 
 #critic_per, audience_per = tomato_rating(my_soup)
 #print(critic_per)
 #print(audience_per)
 print(where2watch(my_soup))
+print(movie_description(my_soup))
