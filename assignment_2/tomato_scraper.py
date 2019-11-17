@@ -1,19 +1,14 @@
 import requests
 from bs4 import BeautifulSoup
-import string
 import re
 from pymongo import MongoClient
 import csv
 
-url = "https://www.rottentomatoes.com/m/star_trek_into_darkness"
-
-response = requests.get(url)
+url_prefix = "https://www.rottentomatoes.com/m/"
 
 
 # with open("test.html", mode='wb') as f:
 #     f.write(response.content)
-
-my_soup = BeautifulSoup(response.content, "html.parser")
 
 
 def tomato_rating(soup):
@@ -76,5 +71,32 @@ def get_movie_name():
     return movie_name
 
 
-# client = MongoClient('localhost', 27017)
-print(get_movie_name())
+def movie_scrapper():
+    movies = get_movie_name()
+    client = MongoClient('localhost', 27017)
+    db = client["rottentomatoes"]
+    posts = db.posts
+    for movie in movies:
+        url = url_prefix + movie
+        response = requests.get(url)
+        my_soup = BeautifulSoup(response.content, "html.parser")
+        critic_per, audience_per = tomato_rating(my_soup)
+        media_platform = where2watch(my_soup)
+        description = movie_description(my_soup)
+        movie_actors = movie_cast(my_soup)
+        meta_data = movie_meta(my_soup)
+        post_data = {
+            "title": movie,
+            "tomato_meter": critic_per,
+            "audience_score": audience_per,
+            "media": media_platform,
+            "description": description,
+            "major_cast": movie_actors,
+            "movie_info": meta_data
+        }
+        result = posts.insert_one(post_data)
+        print('One Post: {0}'.format(result.inserted_id))
+
+
+if __name__ == "__main__":
+    movie_scrapper()
