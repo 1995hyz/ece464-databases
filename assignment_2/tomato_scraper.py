@@ -41,10 +41,17 @@ def movie_description(soup):
 
 def movie_meta(soup):
     meta_data = soup.find_all("li", {"class": "meta-row clearfix"})
+    meta = {}
+    for data in meta_data:
+        label = data.find("div", {"class": "meta-label subtle"})
+        value = data.find("div", {"class": "meta-value"})
+        meta.update({label.text: value.text.replace("\n", "")})
+    return meta
 
 
 #critic_per, audience_per = tomato_rating(my_soup)
 #print(critic_per)
 #print(audience_per)
-print(where2watch(my_soup))
-print(movie_description(my_soup))
+# print(where2watch(my_soup))
+# print(movie_description(my_soup))
+print(movie_meta(my_soup))
