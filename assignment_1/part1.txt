@@ -1,4 +1,12 @@
-1.
+1.  SELECT t.bid, t.sid, MAX(each_count)
+    FROM (
+        SELECT reserves.bid, reserves.sid, COUNT(reserves.bid) as each_count
+        FROM reserves, sailors
+        WHERE reserves.sid = sailors.sid
+        GROUP BY reserves.bid, reserves.sid
+        ORDER BY each_count DESC) as t
+    GROUP BY t.bid
+
 2.  SELECT boats.bid, COUNT(*) FROM boats
     INNER JOIN reserves ON boats.bid = reserves.bid
     GROUP BY boats.bid;

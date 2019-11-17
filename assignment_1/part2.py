@@ -36,11 +36,5 @@ class Reserves(Base):
     day = Column('day', Date, primary_key=True)
 
 
-def question_1():
-    sailors = session.query(Sailor).all()
-    for sailor in sailors:
-        print(sailor.name)
-
-
 if __name__ == "__main__":
-    question_1()
+    pass

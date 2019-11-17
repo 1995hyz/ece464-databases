@@ -21,6 +21,24 @@ def tomato_rating(soup):
     return critic, audience
 
 
-critic_per, audience_per = tomato_rating(my_soup)
-print(critic_per)
-print(audience_per)
+def where2watch(soup):
+    affiliates = soup.find("ul", {"class": "affiliates__list"})
+    items = affiliates.find_all("li", {"class": "affiliate__item"})
+    platforms = {}
+    for item in items:
+        platform = item.a["data-affiliate"]
+        if platform in platforms:
+            continue
+        method = item.a.p.text
+        platforms.update({platform: method})
+    return platforms
+
+
+def movie_description(soup):
+    description = soup.find("div", {"id": "movieSynopsis"})
+
+
+#critic_per, audience_per = tomato_rating(my_soup)
+#print(critic_per)
+#print(audience_per)
+print(where2watch(my_soup))
