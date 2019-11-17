@@ -2,6 +2,8 @@ import requests
 from bs4 import BeautifulSoup
 import string
 import re
+from pymongo import MongoClient
+import csv
 
 url = "https://www.rottentomatoes.com/m/star_trek_into_darkness"
 
@@ -60,3 +62,19 @@ def movie_cast(soup):
         counter += 1
     return cast_actor
 
+
+def get_movie_name():
+    movie_name = []
+    with open("movies_metadata.csv", encoding="utf-8") as csv_file:
+        csv_reader = csv.DictReader(csv_file, delimiter=",")
+        for item in csv_reader:
+            try:
+                name = item["title"].lower().replace(' ', '_')
+                movie_name.append(name)
+            except (AttributeError, ValueError):
+                continue
+    return movie_name
+
+
+# client = MongoClient('localhost', 27017)
+print(get_movie_name())
