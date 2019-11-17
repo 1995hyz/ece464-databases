@@ -45,13 +45,18 @@ def movie_meta(soup):
     for data in meta_data:
         label = data.find("div", {"class": "meta-label subtle"})
         value = data.find("div", {"class": "meta-value"})
-        meta.update({label.text: value.text.replace("\n", "")})
+        meta.update({label.text: value.text.replace("\n", "").replace("  ", "")})
     return meta
 
 
-#critic_per, audience_per = tomato_rating(my_soup)
-#print(critic_per)
-#print(audience_per)
-# print(where2watch(my_soup))
-# print(movie_description(my_soup))
-print(movie_meta(my_soup))
+def movie_cast(soup):
+    casts = soup.find_all("div", {"class": "cast-item media inlineBlock"})
+    cast_actor = {}
+    counter = 0
+    for cast in casts:
+        actor = cast.div.a.span["title"]
+        acting = cast.find("span", {"class": "characters subtle smaller"})["title"]
+        cast_actor.update({counter: [actor, acting]})
+        counter += 1
+    return cast_actor
+
