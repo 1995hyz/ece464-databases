@@ -7,10 +7,6 @@ import csv
 url_prefix = "https://www.rottentomatoes.com/m/"
 
 
-# with open("test.html", mode='wb') as f:
-#     f.write(response.content)
-
-
 def tomato_rating(soup):
     ratings = soup.find_all("span", {"class": "mop-ratings-wrap__percentage"})
     critic = re.sub("[^0-9]", '', ratings[0].text)
