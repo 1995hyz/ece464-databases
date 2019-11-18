@@ -53,7 +53,7 @@ def movie_cast(soup):
     for cast in casts:
         actor = cast.div.a.span["title"]
         acting = cast.find("span", {"class": "characters subtle smaller"})["title"]
-        cast_actor.update({counter: [actor, acting]})
+        cast_actor.update({str(counter): [actor, acting]})
         counter += 1
     return cast_actor
 
@@ -75,27 +75,31 @@ def movie_scrapper():
     movies = get_movie_name()
     client = MongoClient('localhost', 27017)
     db = client["rottentomatoes"]
-    posts = db.posts
+    posts = db.rottentomatoes
     for movie in movies:
-        url = url_prefix + movie
-        response = requests.get(url)
-        my_soup = BeautifulSoup(response.content, "html.parser")
-        critic_per, audience_per = tomato_rating(my_soup)
-        media_platform = where2watch(my_soup)
-        description = movie_description(my_soup)
-        movie_actors = movie_cast(my_soup)
-        meta_data = movie_meta(my_soup)
-        post_data = {
-            "title": movie,
-            "tomato_meter": critic_per,
-            "audience_score": audience_per,
-            "media": media_platform,
-            "description": description,
-            "major_cast": movie_actors,
-            "movie_info": meta_data
-        }
-        result = posts.insert_one(post_data)
-        print('One Post: {0}'.format(result.inserted_id))
+        try:
+            url = url_prefix + movie
+            response = requests.get(url)
+            my_soup = BeautifulSoup(response.content, "html.parser")
+            critic_per, audience_per = tomato_rating(my_soup)
+            media_platform = where2watch(my_soup)
+            description = movie_description(my_soup)
+            movie_actors = movie_cast(my_soup)
+            meta_data = movie_meta(my_soup)
+            post_data = {
+                "title": movie,
+                "tomato_meter": critic_per,
+                "audience_score": audience_per,
+                "media": media_platform,
+                "description": description,
+                "major_cast": movie_actors,
+                "movie_info": meta_data
+            }
+            result = posts.insert_one(post_data)
+            print('One Post: {0}'.format(result.inserted_id))
+        except Exception as e:
+            print(e)
+            continue
 
 
 if __name__ == "__main__":
