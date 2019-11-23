@@ -1,0 +1,24 @@
+1.  # List 10 movies that have the highest tomato-meter score in rotten-tomato
+    db.rottentomatoes.find({}, {title:1, tomato_meter:1, _id:0}).sort({tomato_meter:-1}).limit(10)
+    output: { "title" : "north_by_northwest", "tomato_meter" : "99" }
+            { "title" : "the_third_man", "tomato_meter" : "99" }
+            { "title" : "chinatown", "tomato_meter" : "99" }
+            { "title" : "finding_nemo", "tomato_meter" : "99" }
+            { "title" : "the_battle_of_algiers", "tomato_meter" : "99" }
+            { "title" : "how_to_train_your_dragon", "tomato_meter" : "99" }
+            { "title" : "about_elly", "tomato_meter" : "99" }
+            { "title" : "bill_cunningham_new_york", "tomato_meter" : "99" }
+            { "title" : "the_interrupters", "tomato_meter" : "99" }
+            { "title" : "le_havre", "tomato_meter" : "99" }
+
+2.  # List 5 movies that were directed by Steven Spielberg
+    db.rottentomatoes.find({"movie_info.Directed By: ":"Steven Spielberg"}, {title:1, tomato_meter:1, _id:0}).limit(5)
+    output: { "title" : "jurassic_park", "tomato_meter" : "91" }
+            { "title" : "raiders_of_the_lost_ark", "tomato_meter" : "95" }
+            { "title" : "indiana_jones_and_the_last_crusade", "tomato_meter" : "88" }
+            { "title" : "jaws", "tomato_meter" : "98" }
+            { "title" : "amistad", "tomato_meter" : "77" }
+
+3.  # Count the number of movies in the database that were writen by Stephen King and belong to the catorgary of horror
+    db.rottentomatoes.find({"movie_info.Written By: ":"Stephen King", "movie_info.Genre: ":"Horror"}).count()
+    output: 6
