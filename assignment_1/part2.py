@@ -37,6 +37,7 @@ class Reserves(Base):
 
     # For part3
     payments = relationship("Payments")
+    prices = relationship("Prices")
 
 
 # For part3
@@ -51,5 +52,12 @@ class Payments(Base):
     amount = Column("amount", Integer)
 
 
-if __name__ == "__main__":
-    pass
+# For part3
+class Prices(Base):
+    __tablename__ = 'prices'
+
+    id = Column("pid", Integer, primary_key=True, autoincrement=True)
+    sid = Column("sid", Integer, ForeignKey("Reserves.sid"))
+    bid = Column("bid", Integer, ForeignKey("Reserves.bid"))
+    day = Column("day", Integer, ForeignKey("Reserves.day"))
+    price = Column("price", Integer)
