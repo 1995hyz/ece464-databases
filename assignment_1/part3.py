@@ -127,7 +127,7 @@ def renter_accounting_report_gen(sid, start, end):
             temp[3] = ""
         temp.append(sum_value)
         print(row_format.format(*[str(x) for x in temp]))
-        
+
 
 def get_debt(start, end):
     """
