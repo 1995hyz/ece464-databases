@@ -1,11 +1,14 @@
-1.  SELECT t.bid, t.sid, MAX(each_count)
+1.  SELECT t.bid, t.sid, MAX(boat_count)
     FROM (
-        SELECT reserves.bid, reserves.sid, COUNT(reserves.bid) as each_count
+        SELECT reserves.bid, reserves.sid, COUNT(reserves.bid) as boat_count
         FROM reserves, sailors
         WHERE reserves.sid = sailors.sid
         GROUP BY reserves.bid, reserves.sid
-        ORDER BY each_count DESC) as t
-    GROUP BY t.bid
+        ORDER BY boat_count DESC) as t
+    GROUP BY t.bid;
+
+    // To make run this command, make sure to disable the "ONLY FULL GROUP BY" feature in MySQL.
+    // To disable the feature, run "SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));"
 
 2.  SELECT boats.bid, COUNT(*) FROM boats
     INNER JOIN reserves ON boats.bid = reserves.bid

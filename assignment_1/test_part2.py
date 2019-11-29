@@ -9,8 +9,26 @@ engine = create_engine("mysql+mysqlconnector://yingzhi:123456@localhost/shipping
 Session = sessionmaker(bind=engine)
 session = Session()
 
-
 Base = declarative_base()
+
+
+def test_question_1():
+    correct = {101: 64, 102: 31, 103: 31, 104: 24, 105: 35, 106: 60, 107: 88, 108: 89, 109: 59, 110: 88, 111: 88, 112: 61}
+    t = session.query(part2.Reserves.bid, part2.Reserves.sid, func.count().label("boat_count")). \
+        select_from(part2.Reserves). \
+        join(part2.Sailors, part2.Reserves.sid == part2.Sailors.id). \
+        group_by(part2.Reserves.bid, part2.Reserves.sid). \
+        order_by(desc("boat_count")).subquery("t")
+    boats = session.query(t.c.bid, t.c.sid, func.max(t.c.boat_count)). \
+        select_from(t). \
+        group_by(t.c.bid)
+    errors = []
+    for boat in boats:
+        if boat[0] not in correct:
+            errors.append("Error: Unknown Boat with bid " + str(boat[0]) + " in database")
+        elif boat[1] != correct[boat[0]]:
+            errors.append("Error: Boat with bid " + str(boat[0]) + " is with wrong sid " + str(boat[1]))
+    assert not errors, "{}".format("\n".join(errors))
 
 
 def test_question_2():

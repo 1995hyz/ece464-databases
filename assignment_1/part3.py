@@ -62,7 +62,6 @@ def income_report_gen(start, end):
         data.append(temp)
     row_format = "{:>15}" * (len(row_title)+1)
     print(row_format.format("", *row_title))
-    # for title, row in zip(row_title, data):
     total_income = 0
     for i in range(len(data)):
         print(row_format.format(i+1, *data[i]))
@@ -129,22 +128,60 @@ def renter_accounting_report_gen(sid, start, end):
         print(row_format.format(*[str(x) for x in temp]))
 
 
-def get_debt(start, end):
+def check_payment(sid, bid, day):
     """
-    Calculate debts that renters owe during a period of time.
-    :param start: start date of the period (include).
-    :param end: end date of the period (include).
-    :return: return a list of debt that renters owe.
+    Check if an order has been completely paid.
+    :param sid: a renter's unique id
+    :param bid: a boat's unique id
+    :param day: day of an order
+    :return: return a list of payments
     """
-    pass
+    result = []
+    order = session.query(part2.Prices.sid, part2.Prices.bid, part2.Prices.day, part2.Prices.price). \
+        filter(part2.Prices.sid == sid). \
+        filter(part2.Prices.bid == bid). \
+        filter(part2.Prices.day == day). \
+        all()
+    if order:
+        payments = session.query(part2.Payments.payDay, part2.Payments.amount). \
+            filter(part2.Payments.sid == sid). \
+            filter(part2.Payments.bid == bid). \
+            filter(part2.Payments.day == day). \
+            all()
+        result.append({"sid": order[0].sid, "bid": order[0].bid, "day": order[0].day, "price": order[0].price})
+        for payment in payments:
+            result.append({"payDay": payment.payDay, "amount": payment.amount})
+        return result
+    else:
+        return []
+
+
+def payment_report_gen(sid, bid, day):
+    """
+    Print payment report of an order.
+    :param sid: a renter's unique id
+    :param bid: a boat's unique id
+    :param day: day of an order
+    :return: None
+    """
+    results = check_payment(sid, bid, day)
+    general_data = [str(value) for key, value in results[0].items()]
+    order_title = ["Renter Id", "Boat Id", "Date", "Price"]
+    row_title = ["Pay Date", "Amount"]
+    order_format = "{:>20}"
+    row_format = "{:>20}" * len(results[1])
+    for i in range(len(order_title)):
+        print(order_format.format(order_title[i] + ": " + general_data[i]), end="")
+    print("")
+    print("----------------------------------------------------------------------------------")
+    print(row_format.format(*row_title))
+    print("----------------------------------------------------------------------------------")
+    for result in results[1:]:
+        print(row_format.format(*[str(value) for key, value in result.items()]))
 
 
 if __name__ == "__main__":
     start_day = datetime.date(1998, 10, 10)
     end_day = datetime.date(1998, 11, 15)
-    """
-    result = income(start_day, end_day)
-    print(result)
-    """
-    # income_report_gen(start_day, end_day)
-    renter_accounting_report_gen(23, start_day, end_day)
+    # renter_accounting_report_gen(23, start_day, end_day)
+    payment_report_gen(23, 104, start_day)
