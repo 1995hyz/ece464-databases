@@ -12,19 +12,6 @@ session = Session()
 Base = declarative_base()
 
 
-def inventory(date):
-    """
-    date should be in the format "mm/nn/yyyy"
-    """
-    boats = session.query(part2.Reserves.bid, part2.Reserves.day)
-    results = []
-    for boat in boats:
-        if boat.day == date:
-            results.append({boat.bid: 0})
-        else:
-            results.append({boat.bid: 1})
-
-
 def get_income(start, end):
     """
     Calculate business income during the period between two dates.
@@ -165,23 +152,24 @@ def payment_report_gen(sid, bid, day):
     :return: None
     """
     results = check_payment(sid, bid, day)
+    if not results:
+        print("Cannot Find a Transaction with sid: " + str(sid) + " bid: " + str(bid) + " day: " + str(day))
     general_data = [str(value) for key, value in results[0].items()]
     order_title = ["Renter Id", "Boat Id", "Date", "Price"]
     row_title = ["Pay Date", "Amount"]
     order_format = "{:>20}"
-    row_format = "{:>20}" * len(results[1])
     for i in range(len(order_title)):
         print(order_format.format(order_title[i] + ": " + general_data[i]), end="")
     print("")
     print("----------------------------------------------------------------------------------")
-    print(row_format.format(*row_title))
-    print("----------------------------------------------------------------------------------")
-    for result in results[1:]:
-        print(row_format.format(*[str(value) for key, value in result.items()]))
+    if len(results) > 1:
+        row_format = "{:>20}" * len(results[1])
+        print(row_format.format(*row_title))
+        print("----------------------------------------------------------------------------------")
+        for result in results[1:]:
+            print(row_format.format(*[str(value) for key, value in result.items()]))
 
 
-if __name__ == "__main__":
-    start_day = datetime.date(1998, 10, 10)
-    end_day = datetime.date(1998, 11, 15)
-    # renter_accounting_report_gen(23, start_day, end_day)
-    payment_report_gen(23, 104, start_day)
+start_day = datetime.date(1998, 10, 10)
+end_day = datetime.date(1998, 11, 15)
+payment_report_gen(23, 104, start_day)
