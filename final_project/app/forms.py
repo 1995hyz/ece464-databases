@@ -15,4 +15,6 @@ class ItemForm(FlaskForm):
 
 class StoreForm(FlaskForm):
     store_name = StringField("Store Name", validators=[DataRequired()])
-    street_addr = StringField()
+    street_addr = StringField("Street Addr", validators=[DataRequired()])
+    city_name = StringField("City", validators=[DataRequired()])
+    state_name = StringField("State", validators=[DataRequired()])

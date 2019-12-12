@@ -1,0 +1,14 @@
+<html>
+    <head>
+      {% if title %}
+      <title>{{ title }}</title>
+      {% else %}
+      <title>Welcome to Store-Explorer</title>
+      {% endif %}
+    </head>
+    <body>
+        <div>Add/Find Your Items: <a href="/index">Home</a></div>
+        <hr>
+        {% block content %}{% endblock %}
+    </body>
+</html>
