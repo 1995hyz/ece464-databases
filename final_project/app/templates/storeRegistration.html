@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Add A Store</h1>
+    <form action="" method="post" novalidate>
+        <p>
+            {{ form.store_name.label }}<br>
+            {{ form.store_name(size=32) }}
+        </p>
+        <p>
+            {{ form.street_addr.label }}<br>
+            {{ form.street_addr(size=32) }}
+        </p>
+        <p>
+            {{ form.city_name.label }}<br>
+            {{ form.city_name(size=32) }}
+        </p>
+        <p>
+            {{ form.state_name.label }}<br>
+            {{ form.state_name(size=8) }}
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+{% endblock %}
