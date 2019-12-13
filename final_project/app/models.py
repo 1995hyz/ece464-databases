@@ -19,8 +19,8 @@ class Stores(db.Model):
     street = db.Column(db.String(32), nullable=False)
     city = db.Column(db.String(32), index=True, nullable=False)
     state = db.Column(db.String(8), nullable=False)
-    longitude = db.Column(db.float, nullable=False)
-    latitude = db.Column(db.float, nullable=False)
+    longitude = db.Column(db.Float, nullable=False)
+    latitude = db.Column(db.Float, nullable=False)
     prices = db.relationship("Prices", backref="stores", lazy=True)
     inventory = db.relationship("Inventory", backref="stores", lazy=True)
 
