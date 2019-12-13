@@ -32,7 +32,6 @@ PRIMARY KEY(price_id));
 CREATE TABLE Inventory(
 store_id INTEGER not NULL,
 item_id INTEGER not NULL,
-quantity INTEGER default NULL,
 FOREIGN KEY(store_id) REFERENCES Stores(store_id),
 FOREIGN KEY(item_id) REFERENCES Items(item_id),
 PRIMARY KEY(store_id, item_id));
@@ -327,19 +326,18 @@ insert into Items value(287,"Peppermint","Peppermint  description",89720);
 insert into Items value(288,"Persimmon- hachiya","Persimmon- hachiya  description",11962);
 insert into Items value(289,"Pineapple","Pineapple  description",66177);
 
-
-insert into Stores value(111,"West Side Market","276 W. 4th St.");
-insert into Stores value(112,"Pheobes","55 E 5 St.");
-insert into Stores value(113,"Kmart","201 Astore Pl.");
-insert into Stores value(114,"Walgreens","32 Astor Place");
-insert into Stores value(115,"Boston Market","240 E. Houston St.");
-insert into Stores value(116,"Independent Super & Co.","176 8th St.");
-insert into Stores value(117,"Frankies Kitchen","41 Cooper Sq.");
-insert into Stores value(118,"Moishes Bakery","110 E4th St.");
-insert into Stores value(119,"B&H","22 E 5th St.");
-insert into Stores value(120,"Whole Foods ","22 1st Ave");
-insert into Stores value(121,"Rite Aid","11 W. 6th St.");
-insert into Stores value(122,"Bodega on the Corner","79 E 11th St.");
+insert into Stores value(111,"West Side Market","276 W. 4th St.","New York","NY",-74.003552,40.7358808);
+insert into Stores value(112,"Pheobes","55 E 5 St.","New York","NY",-73.9907253,40.72762);
+insert into Stores value(113,"Kmart","201 Astore Pl.","New York","NY",-73.9900823,40.7295681);
+insert into Stores value(114,"Walgreens","32 Astor Place","New York","NY",-73.9915756,40.7298852);
+insert into Stores value(115,"Boston Market","240 E. Houston St.","New York","NY",-73.9958775,40.7252985);
+insert into Stores value(116,"Independent Super & Co.","176 8th St.","New York","NY",-73.9926901,40.7306163);
+insert into Stores value(117,"Frankies Kitchen","41 Cooper Sq.","New York","NY",-73.9902272,40.728544);
+insert into Stores value(118,"Moishes Bakery","110 E4th St.","New York","NY",-73.9883729,40.7256568);
+insert into Stores value(119,"B&H","22 E 5th St.","New York","NY",-73.9797155,40.7228841);
+insert into Stores value(120,"Whole Foods ","22 1st Ave","New York","NY",-73.9879038,40.7235607);
+insert into Stores value(121,"Rite Aid","11 W. 6th St.","New York","NY",-73.9942992,40.6752626);
+insert into Stores value(122,"Bodega on the Corner","79 E 11th St.","New York","NY",-73.9919769,40.7328325);
 
 insert into Prices value(200,'2017-8-24',0.46,138,115);
 insert into Prices value(201,'2018-10-15',2.67,135,114);
