@@ -9,7 +9,7 @@ def index():
     return "Hello, World!"
 
 
-@app.route('/itemRegistration')
+@app.route('/itemRegistration', methods=['GET', 'POST'])
 def item_registration():
     form = ItemForm()
     if form.validate_on_submit():
@@ -18,7 +18,7 @@ def item_registration():
     return render_template("itemRegistration.html", title="Item Registration", form=form)
 
 
-@app.route('/storeRegistration')
+@app.route('/storeRegistration', methods=['GET', 'POST'])
 def store_registration():
     form = StoreForm()
     return render_template("storeRegistration.html", title="Store Registration", form=form)
