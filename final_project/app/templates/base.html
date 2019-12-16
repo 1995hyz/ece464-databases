@@ -5,7 +5,7 @@
         {% endblock %}
     {% endblock%}
     <body>
-    {% block app_ontent%}
+    {% block content%}
 		{% with messages = get_flashed_messages() %}
 		{% if messages %}
 		<ul>
@@ -15,7 +15,7 @@
 		</ul>
 		{% endif %}
 		{% endwith %}
-		{% block content%}{% endblock %}
+		{% block app_content%}{% endblock %}
     {% endblock %}
     </body>
 
