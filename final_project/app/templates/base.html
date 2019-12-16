@@ -1,15 +1,21 @@
-<html>
-    <head>
-      {% if title %}
-      <title>{{ title }}</title>
-      {% else %}
-      <title>Welcome to Store-Explorer</title>
-      {% endif %}
-        {% block head %}{% endblock%}
-    </head>
+{% extends 'bootstrap/base.html' %}
+    {% block head %}
+        {% block title %}
+            <title>{{ title }}</title>
+        {% endblock %}
+    {% endblock%}
     <body>
-        <div>Add/Find Your Items: <a href="/index">Home</a></div>
-        <hr>
-        {% block content %}{% endblock %}
+    {% block app_ontent%}
+		{% with messages = get_flashed_messages() %}
+		{% if messages %}
+		<ul>
+			{% for message in messages %}
+			<li style="color: red;">{{ message }}</li>
+			{% endfor %}
+		</ul>
+		{% endif %}
+		{% endwith %}
+		{% block content%}{% endblock %}
+    {% endblock %}
     </body>
-</html>
+

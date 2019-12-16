@@ -1,8 +1,32 @@
 {% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block head %}
+        <style type="text/css">
+          #map{ width:700px; height: 500px; }
+        </style>
+    {% block scripts %}
+        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAl3adyWb3KM4ujKg81YzLuYsI6Xr0fbpU"></script>
+        <script type="text/javascript" src="{{ url_for('.static', filename='map.js')}}"></script>
+    {% endblock %}
+{% endblock %}
+
 
 {% block content %}
     <h1>Add A Store</h1>
+
+    <p>
+        <div id="map"></div>
+        <h2>Chosen Location</h2>
+        <script type="text/javascript" src="{{ url_for('.static', filename='map.js')}}"></script>
+    </p>
+
     <form action="" method="post" novalidate>
+        {{ form.csrf_token }}
+        <p>
+            {{ form.store_lat }}<br>
+            {{ form.store_lng }}
+        </p>
         <p>
             {{ form.store_name.label }}<br>
             {{ form.store_name(size=32) }}

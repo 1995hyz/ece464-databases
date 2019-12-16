@@ -9,7 +9,7 @@ var marker = false; ////Has the user plotted their location marker?
 function initMap() {
 
     //The center location of our map.
-    var centerOfMap = new google.maps.LatLng(52.357971, -6.516758);
+    var centerOfMap = new google.maps.LatLng(40.7285698, -73.9902055);
 
     //Map options.
     var options = {
@@ -51,8 +51,8 @@ function markerLocation(){
     //Get location.
     var currentLocation = marker.getPosition();
     //Add lat and lng values to a field that we can save.
-    document.getElementById('lat').value = currentLocation.lat(); //latitude
-    document.getElementById('lng').value = currentLocation.lng(); //longitude
+    document.getElementById('store_lat').value = currentLocation.lat(); //latitude
+    document.getElementById('store_lng').value = currentLocation.lng(); //longitude
 }
 
 
