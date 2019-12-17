@@ -2,7 +2,6 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, IntegerField
 from wtforms.validators import DataRequired, ValidationError
 from app.models import Items, Stores
-from geopy.geocoders import Nominatim
 
 
 class ItemForm(FlaskForm):
@@ -16,6 +15,7 @@ class ItemForm(FlaskForm):
     barcode = StringField("Barcode")
     submit = SubmitField("Submit")
 
+    @staticmethod
     def validate_name(self, store_name):
         store = Stores.query.filter_by(item_name=store_name.data).first()
         if not store:
@@ -30,10 +30,6 @@ class StoreForm(FlaskForm):
     city_name = StringField("City", validators=[DataRequired()])
     state_name = StringField("State", validators=[DataRequired()])
     submit = SubmitField("Submit")
-
-    @staticmethod
-    def validate_address():
-        geolocator = Nominatim(user_agent="Store_Tracker")
 
 
 class SearchForm(FlaskForm):

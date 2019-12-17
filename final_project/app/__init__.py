@@ -12,3 +12,5 @@ migrate = Migrate(app, db)
 bootstrap = Bootstrap(app)
 
 from app import routes, models
+
+app.run()

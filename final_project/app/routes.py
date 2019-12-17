@@ -4,6 +4,7 @@ from flask import render_template, flash, redirect, request
 from app.models import Stores, Items, Prices
 import datetime
 import math
+from sqlalchemy import func
 
 
 @app.route('/')
@@ -91,6 +92,7 @@ def item_searching():
     form = SearchForm()
     curr_lng = form.store_lng.data
     curr_lat = form.store_lat.data
+    store_list = []
     if form.validate_on_submit():
         if form.barcode.data:
             search_result = Items.query.filter_by(barcode=form.barcode.data).all()
@@ -100,4 +102,8 @@ def item_searching():
             else:
                 for result in search_result:
                     store = Stores.query.filter_by(store_id=result.store_id).one()
-                    pass
+                    if haversine((curr_lat, curr_lng), (store.latitude, store.longitude)) < 1000:
+                        price = Prices.query.filter_by(store_id=store.store_id, item_id=result.item_id).\
+                            having(func.max(Prices.time))
+                        store_list.append([store.name, store.street, store.city, store.state, str(price.price), str(price.time)])
+                return render_template("itemSearch.html", search_result=search_result)
