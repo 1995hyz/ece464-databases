@@ -9,9 +9,6 @@ class Items(db.Model):
     store_id = db.Column(db.Integer, db.ForeignKey('stores.store_id'), nullable=False)
     prices = db.relationship("Prices", backref="items", lazy=True)
 
-    def __repr__(self):
-        return '<Items {}>'.format(self.username)
-
 
 class Stores(db.Model):
     store_id = db.Column(db.Integer, primary_key=True, autoincrement=True)

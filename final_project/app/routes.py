@@ -16,7 +16,6 @@ def index():
 @app.route('/itemRegistration', methods=['GET', 'POST'])
 def item_registration():
     form = ItemForm()
-
     if form.validate_on_submit():
         longitude = form.store_lng.data
         latitude = form.store_lat.data
@@ -29,7 +28,7 @@ def item_registration():
                 flash("This item has existed in the store. Redirecting to the Item Update Page...")
                 return redirect("/itemUpdate.html")
             else:
-                new_item = Items(name=form.store_name.data,
+                new_item = Items(name=form.item_name.data,
                                  description=form.item_description.data,
                                  barcode=form.barcode.data,
                                  store_id=store[0].store_id)
@@ -93,17 +92,37 @@ def item_searching():
     curr_lng = form.store_lng.data
     curr_lat = form.store_lat.data
     store_list = []
+    header = ["Price", "Store Name", "Address", "Record Time"]
     if form.validate_on_submit():
         if form.barcode.data:
             search_result = Items.query.filter_by(barcode=form.barcode.data).all()
-            if search_result is None:
+            if len(search_result) == 0:
                 flash("The item is not in the database.")
                 return redirect("/itemSearch")
             else:
                 for result in search_result:
-                    store = Stores.query.filter_by(store_id=result.store_id).one()
-                    if haversine((curr_lat, curr_lng), (store.latitude, store.longitude)) < 1000:
+                    store = Stores.query.filter_by(store_id=result.store_id).first()
+                    if haversine((float(curr_lat), float(curr_lng)), (float(store.latitude), float(store.longitude))) < 1000:
                         price = Prices.query.filter_by(store_id=store.store_id, item_id=result.item_id).\
-                            having(func.max(Prices.time))
-                        store_list.append([store.name, store.street, store.city, store.state, str(price.price), str(price.time)])
-                return render_template("itemSearch.html", search_result=search_result)
+                            group_by(Prices.price_id).having(func.max(Prices.time)).first()
+                        store_list.append([str(price.price), store.name,
+                                           ' '.join([store.street, store.city, store.state]), str(price.time)])
+                return render_template("itemSearch.html", form=form, search_result=store_list, header=header)
+        elif form.item_name.data:
+            search_result = Items.query.filter(Items.name.ilike("%" + form.item_name.data + "%")).all()
+            if len(search_result) == 0:
+                flash("The item is not in the database.")
+                return redirect("/itemSearch")
+            else:
+                for result in search_result:
+                    store = Stores.query.filter_by(store_id=result.store_id).first()
+                    if haversine((float(curr_lat), float(curr_lng)), (float(store.latitude), float(store.longitude))) < 1000:
+                        price = Prices.query.filter_by(store_id=store.store_id, item_id=result.item_id).\
+                            group_by(Prices.price_id).having(func.max(Prices.time)).first()
+                        store_list.append([str(price.price), store.name,
+                                           ' '.join([store.street, store.city, store.state]), str(price.time)])
+                return render_template("itemSearch.html", form=form, search_result=store_list, header=header)
+        else:
+            flash("Please fill either the barcode or the item name field.")
+            return redirect("/itemSearch")
+    return render_template("itemSearch.html", form=form, search_result=[], header=header)

@@ -36,9 +36,7 @@
 {% endblock %}
 
 {% block app_content %}
-    <div class="container">
-    <h1>Add An Item</h1>
-
+    <h1>Search An Item</h1>
         <p>
         <div id="map"></div>
 
@@ -63,9 +61,18 @@
         <p>{{ form.submit() }}</p>
     </form>
 
-    <label id="search_result">
+    <table id="search_result">
+        <tr>
+            {% for head in header %}
+            <th> {{ head }} </th>
+            {% endfor %}
+        </tr>
         {% for result in search_result %}
-        <div>{{  }}</div>>
-    </label>
-    </div>
+        <tr>
+            {% for entry in result %}
+            <th> {{ entry }} </th>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
 {% endblock %}
