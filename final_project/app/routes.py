@@ -23,7 +23,7 @@ def item_registration():
         if len(store) == 0:
             flash("This store hasn't existed in the database.")
         else:
-            item_check = Items.query.filter_by(barcode=form.barcode.data).all()
+            item_check = Items.query.filter_by(barcode=form.barcode.data, store_id=store[0].store_id).all()
             if len(item_check) != 0:
                 flash("This item has existed in the store. Redirecting to the Item Update Page...")
                 return redirect("/itemUpdate.html")
@@ -126,3 +126,9 @@ def item_searching():
             flash("Please fill either the barcode or the item name field.")
             return redirect("/itemSearch")
     return render_template("itemSearch.html", form=form, search_result=[], header=header)
+
+
+@app.route('/itemUpdate', methods=['GET', 'POST'])
+def item_update():
+    form = ItemForm()
+    return render_template("itemUpdate.html", form=form)
