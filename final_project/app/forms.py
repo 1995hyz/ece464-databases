@@ -24,6 +24,16 @@ class ItemForm(FlaskForm):
     """
 
 
+class UpdateItemForm(FlaskForm):
+    store_name = StringField("Store Name")
+    item_name = StringField("Item Name")
+    item_dollar = IntegerField("Dollar", validators=[DataRequired()])
+    item_cent = IntegerField("Cent", validators=[DataRequired()])
+    item_description = StringField("Item Description")
+    barcode = StringField("Barcode")
+    submit = SubmitField("Submit")
+
+
 class StoreForm(FlaskForm):
     store_lng = StringField("lng", validators=[DataRequired()])
     store_lat = StringField("lat", validators=[DataRequired()])

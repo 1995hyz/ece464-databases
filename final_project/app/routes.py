@@ -1,10 +1,10 @@
 from app import app, db
-from app.forms import ItemForm, StoreForm, SearchForm
-from flask import render_template, flash, redirect, request
+from app.forms import ItemForm, StoreForm, SearchForm, UpdateItemForm
+from flask import render_template, flash, redirect, request, session, json, url_for
 from app.models import Stores, Items, Prices
 import datetime
 import math
-from sqlalchemy import func
+from sqlalchemy import func, update
 
 
 @app.route('/')
@@ -25,8 +25,10 @@ def item_registration():
         else:
             item_check = Items.query.filter_by(barcode=form.barcode.data, store_id=store[0].store_id).all()
             if len(item_check) != 0:
-                flash("This item has existed in the store. Redirecting to the Item Update Page...")
-                return redirect("/itemUpdate.html")
+                flash("This item has existed in the store. Redirect to the Item Update Page.")
+                # item_store = Stores.query.filter_by(store_id=item_check[0].store_id).first()
+                messages = json.dumps({"store_id": item_check[0].store_id, "item_id": item_check[0].item_id})
+                return redirect(url_for('.item_update', messages=messages))
             else:
                 new_item = Items(name=form.item_name.data,
                                  description=form.item_description.data,
@@ -130,5 +132,20 @@ def item_searching():
 
 @app.route('/itemUpdate', methods=['GET', 'POST'])
 def item_update():
-    form = ItemForm()
-    return render_template("itemUpdate.html", form=form)
+    form = UpdateItemForm()
+    messages = request.args['messages']
+    messages = json.loads(messages)
+    store = Stores.query.filter_by(store_id=messages["store_id"]).first()
+    item = Items.query.filter_by(item_id=messages["item_id"]).first()
+    if form.validate_on_submit():
+        stmt = update(Items).where(Items.item_id == messages["item_id"]).values(description=form.item_description.data)
+        new_price = Prices(time=datetime.datetime.now(),
+                           price=float(str(form.item_dollar.data) + "." + str(form.item_cent.data)),
+                           item_id=messages["item_id"],
+                           store_id=messages["store_id"])
+        db.session.add(new_price)
+        db.session.commit()
+        store = Stores.query.filter_by(store_id=messages["store_id"]).first()
+        item = Items.query.filter_by(item_id=messages["item_id"]).first()
+        return render_template("itemUpdate.html", form=form, store=store, item=item)
+    return render_template("itemUpdate.html", form=form, store=store, item=item)

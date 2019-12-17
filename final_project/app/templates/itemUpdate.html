@@ -50,42 +50,31 @@
 
 {% block app_content %}
     <div class="container">
-    <h1>Add An Item</h1>
+    <h1>Update An Item</h1>
 
-        <p>
-        <div id="map"></div>
-
-        <h2>Chosen Location</h2>
-        <script type="text/javascript" src="{{ url_for('.static', filename='map.js')}}"></script>
-
-        </p>
     <form action="" method="post" novalidate>
         {{ form.csrf_token }}
         <p>
-            {{ form.store_lat }}<br>
-            {{ form.store_lng }}
-        </p>
-        <p>
             {{ form.store_name.label }}<br>
-            {{ form.store_name(size=32, value="test", disabled="disabled") }}
+            {{ form.store_name(size=32, value=store.name, disabled="disabled") }}
         </p>
         <p>
             {{ form.item_name.label }}<br>
-            {{ form.item_name(size=32) }}
+            {{ form.item_name(size=32, value=item.name, disabled="disabled") }}
         </p>
         <p>
             {{ form.item_dollar.label }}
-            {{ form.item_dollar(size=16) }}
+            {{ form.item_dollar(size=16, value=item.dollar) }}
             {{ form.item_cent.label }}
-            {{ form.item_cent(size=16) }}
+            {{ form.item_cent(size=16, value=item.cent) }}
         </p>
         <p>
             {{ form.item_description.label }}<br>
-            {{ form.item_description(size=64) }}
+            {{ form.item_description(size=64, value=item.description) }}
         </p>
         <p>
             {{ form.barcode.label }}<br>
-            {{ form.barcode(size=32) }}
+            {{ form.barcode(size=32, value=item.barcode, disabled="disabled") }}
         </p>
         <p>{{ form.submit() }}</p>
     </form>
