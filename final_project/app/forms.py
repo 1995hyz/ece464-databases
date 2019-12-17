@@ -35,3 +35,14 @@ class StoreForm(FlaskForm):
     def validate_address():
         geolocator = Nominatim(user_agent="Store_Tracker")
 
+
+class SearchForm(FlaskForm):
+    store_lng = StringField("lng", validators=[DataRequired()])
+    store_lat = StringField("lat", validators=[DataRequired()])
+    item_name = StringField("Item Name")
+    barcode = StringField("Barcode")
+
+    @staticmethod
+    def validate_itemInput(item_name, barcode):
+        if not (item_name and barcode):
+            raise ValidationError("Item Name field and Barcode cannot be both empty.")

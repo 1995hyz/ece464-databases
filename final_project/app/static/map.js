@@ -23,7 +23,7 @@ function initMap() {
     //Listen for any clicks on the map.
     google.maps.event.addListener(map, 'click', function(event) {
         //Get the location that the user clicked.
-        var clickedLocation = event.latLng;
+        const clickedLocation = event.latLng;
         //If the marker hasn't been added.
         if(marker === false){
             //Create the marker.
@@ -49,7 +49,7 @@ function initMap() {
 //values to our textfields so that we can save the location.
 function markerLocation(){
     //Get location.
-    var currentLocation = marker.getPosition();
+    const currentLocation = marker.getPosition();
     //Add lat and lng values to a field that we can save.
     document.getElementById('store_lat').value = currentLocation.lat(); //latitude
     document.getElementById('store_lng').value = currentLocation.lng(); //longitude

@@ -1,26 +1,25 @@
 {% extends "base.html" %}
-{% import 'bootstrap/wtf.html' as wtf %}
 
 {% block head %}
         <style type="text/css">
           #map{ width:700px; height: 500px; }
         </style>
     {% block scripts %}
-        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key="></script>
+        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA5yKrAxQgoAwUo29KgodIf6_IOtv5e1S0"></script>
         <script type="text/javascript" src="{{ url_for('.static', filename='map.js')}}"></script>
     {% endblock %}
 {% endblock %}
 
-
 {% block app_content %}
-    <h1>Add A Store</h1>
+    <h1>Add An Item</h1>
 
-    <p>
+        <p>
         <div id="map"></div>
+
         <h2>Chosen Location</h2>
         <script type="text/javascript" src="{{ url_for('.static', filename='map.js')}}"></script>
-    </p>
 
+        </p>
     <form action="" method="post" novalidate>
         {{ form.csrf_token }}
         <p>
@@ -28,21 +27,14 @@
             {{ form.store_lng }}
         </p>
         <p>
-            {{ form.store_name.label }}<br>
-            {{ form.store_name(size=32) }}
+            {{ form.item_name.label }}<br>
+            {{ form.item_name(size=32) }}
         </p>
         <p>
-            {{ form.street_addr.label }}<br>
-            {{ form.street_addr(size=32) }}
-        </p>
-        <p>
-            {{ form.city_name.label }}<br>
-            {{ form.city_name(size=32) }}
-        </p>
-        <p>
-            {{ form.state_name.label }}<br>
-            {{ form.state_name(size=8) }}
+            {{ form.barcode.label }}<br>
+            {{ form.barcode(size=32) }}
         </p>
         <p>{{ form.submit() }}</p>
     </form>
+
 {% endblock %}
