@@ -15,11 +15,13 @@ class ItemForm(FlaskForm):
     barcode = StringField("Barcode")
     submit = SubmitField("Submit")
 
+    """
     @staticmethod
     def validate_name(self, store_name):
         store = Stores.query.filter_by(item_name=store_name.data).first()
         if not store:
             raise ValidationError("The Store isn't existed in the database.")
+    """
 
 
 class StoreForm(FlaskForm):
@@ -37,8 +39,9 @@ class SearchForm(FlaskForm):
     store_lat = StringField("lat", validators=[DataRequired()])
     item_name = StringField("Item Name")
     barcode = StringField("Barcode")
+    submit = SubmitField("Submit")
 
     @staticmethod
-    def validate_itemInput(item_name, barcode):
+    def validate_item_input(item_name, barcode):
         if not (item_name and barcode):
             raise ValidationError("Item Name field and Barcode cannot be both empty.")
