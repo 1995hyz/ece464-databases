@@ -3,6 +3,7 @@ from app.forms import ItemForm, StoreForm, SearchForm
 from flask import render_template, flash, redirect, request
 from app.models import Stores, Items, Prices
 import datetime
+import math
 
 
 @app.route('/')
@@ -70,9 +71,26 @@ def store_registration():
     return render_template("storeRegistration.html", title="Store Registration", form=form)
 
 
+def haversine(coord1, coord2):
+    R = 6372800  # Earth radius in meters
+    lat1, lon1 = coord1
+    lat2, lon2 = coord2
+
+    phi1, phi2 = math.radians(lat1), math.radians(lat2)
+    dphi = math.radians(lat2 - lat1)
+    dlambda = math.radians(lon2 - lon1)
+
+    a = math.sin(dphi / 2) ** 2 + \
+        math.cos(phi1) * math.cos(phi2) * math.sin(dlambda / 2) ** 2
+
+    return 2 * R * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+
+
 @app.route('/itemSearch', methods=['GET', 'POST'])
 def item_searching():
     form = SearchForm()
+    curr_lng = form.store_lng.data
+    curr_lat = form.store_lat.data
     if form.validate_on_submit():
         if form.barcode.data:
             search_result = Items.query.filter_by(barcode=form.barcode.data).all()
@@ -80,4 +98,6 @@ def item_searching():
                 flash("The item is not in the database.")
                 return redirect("/itemSearch")
             else:
-                pass
+                for result in search_result:
+                    store = Stores.query.filter_by(store_id=result.store_id).one()
+                    pass
