@@ -7,12 +7,6 @@ import math
 from sqlalchemy import func, update
 
 
-@app.route('/')
-@app.route('/index')
-def index():
-    return "Hello, World!"
-
-
 @app.route('/itemRegistration', methods=['GET', 'POST'])
 def item_registration():
     form = ItemForm()
@@ -88,13 +82,14 @@ def haversine(coord1, coord2):
     return 2 * R * math.atan2(math.sqrt(a), math.sqrt(1 - a))
 
 
+@app.route('/', methods=['GET', 'POST'])
 @app.route('/itemSearch', methods=['GET', 'POST'])
 def item_searching():
     form = SearchForm()
     curr_lng = form.store_lng.data
     curr_lat = form.store_lat.data
     store_list = []
-    header = ["Price", "Store Name", "Address", "Record Time"]
+    header = ["Price", "item Name", "Store Name", "Address", "Record Time"]
     if form.validate_on_submit():
         if form.barcode.data:
             search_result = Items.query.filter_by(barcode=form.barcode.data).all()
@@ -107,7 +102,7 @@ def item_searching():
                     if haversine((float(curr_lat), float(curr_lng)), (float(store.latitude), float(store.longitude))) < 1000:
                         price = Prices.query.filter_by(store_id=store.store_id, item_id=result.item_id).\
                             group_by(Prices.price_id).having(func.max(Prices.time)).first()
-                        store_list.append([str(price.price), store.name,
+                        store_list.append([str(price.price), result.name, store.name,
                                            ' '.join([store.street, store.city, store.state]), str(price.time)])
                 return render_template("itemSearch.html", form=form, search_result=store_list, header=header)
         elif form.item_name.data:
@@ -119,9 +114,11 @@ def item_searching():
                 for result in search_result:
                     store = Stores.query.filter_by(store_id=result.store_id).first()
                     if haversine((float(curr_lat), float(curr_lng)), (float(store.latitude), float(store.longitude))) < 1000:
+                        print(store.store_id)
+                        print(result.item_id)
                         price = Prices.query.filter_by(store_id=store.store_id, item_id=result.item_id).\
                             group_by(Prices.price_id).having(func.max(Prices.time)).first()
-                        store_list.append([str(price.price), store.name,
+                        store_list.append([str(price.price), result.name, store.name,
                                            ' '.join([store.street, store.city, store.state]), str(price.time)])
                 return render_template("itemSearch.html", form=form, search_result=store_list, header=header)
         else:
